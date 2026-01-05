@@ -2,7 +2,7 @@
 
 A complete integration of knowledge graph capabilities with Dify.ai, powered by YugabyteDB for distributed graph storage, enabling semantic search, entity extraction, and graph visualization for enhanced AI workflows.
 
-## 🌟 Features
+## Features
 
 - **YugabyteDB Integration**: Distributed, PostgreSQL-compatible graph storage with built-in vector support
 - **Document Processing API**: Extract text from PDFs, DOCX, and plain text files
@@ -12,7 +12,7 @@ A complete integration of knowledge graph capabilities with Dify.ai, powered by 
 - **Dify Integration**: Seamlessly integrate with Dify workflows via HTTP endpoints
 - **Scalable Architecture**: Horizontally scalable graph storage with YugabyteDB's distributed design
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Docker and Docker Compose installed
 - Git
@@ -20,7 +20,7 @@ A complete integration of knowledge graph capabilities with Dify.ai, powered by 
 - YugabyteDB instance (local or cloud) - [Get started here](https://www.yugabyte.com/download/)
   
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install Dify
 
@@ -67,10 +67,9 @@ docker exec -it yugabyte bin/ysqlsh -h localhost -c "SELECT version();"
 #### Option C: Install YugabyteDB Locally
 
 ```bash
-# Download and install YugabyteDB
-wget https://downloads.yugabyte.com/releases/2.20.1.1/yugabyte-2.20.1.1-b1-darwin-x86_64.tar.gz
-tar xvfz yugabyte-2.20.1.1-b1-darwin-x86_64.tar.gz
-cd yugabyte-2.20.1.1/
+# Download and install YugabyteDB (2025.1 or 2025.2)
+wget https://software.yugabyte.com/releases/2025.2.0.0/yugabyte-2025.2.0.0-b131-darwin-x86_64.tar.gz
+tar xvfz yugabyte-2025.2.0.0-b131-darwin-x86_64.tar.gz && cd yugabyte-2025.2.0.0/
 ./bin/yugabyted start
 ```
 
@@ -258,7 +257,7 @@ CREATE INDEX IF NOT EXISTS idx_nodes_name ON graph_nodes(entity_name);
 CREATE INDEX IF NOT EXISTS idx_nodes_type ON graph_nodes(entity_type);
 CREATE INDEX IF NOT EXISTS idx_edges_source ON graph_edges(source_node_id);
 CREATE INDEX IF NOT EXISTS idx_edges_target ON graph_edges(target_node_id);
-CREATE INDEX IF NOT EXISTS idx_nodes_embedding ON graph_nodes USING ivfflat (embedding vector_cosine_ops);
+CREATE INDEX IF NOT EXISTS idx_nodes_embedding ON graph_nodes USING ybhnsw (embedding vector_cosine_ops);
 ```
 
 ### 6. Embedding Worker Service
@@ -281,7 +280,7 @@ DB = {
 
 print("Loading embedding model (first run will download ~90MB)...")
 model = SentenceTransformer('all-MiniLM-L6-v2')
-print(f"✅ Model loaded! Dimension: {model.get_sentence_embedding_dimension()}")
+print(f"Model loaded! Dimension: {model.get_sentence_embedding_dimension()}")
 
 while True:
     try:
@@ -313,16 +312,16 @@ while True:
                 WHERE id = %s
             """, (emb.tolist(), node_id))
             
-            print(f"✅ Added embedding: {name}")
+            print(f"Added embedding: {name}")
         
         conn.commit()
         cur.close()
         conn.close()
         
-        print(f"📊 Batch complete: {len(nodes)} embeddings added\n")
+        print(f" Batch complete: {len(nodes)} embeddings added\n")
         
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" Error: {e}")
         time.sleep(10)
 ```
 
@@ -430,7 +429,7 @@ docker exec -it yugabyte bin/ysqlsh -h localhost
 # Should see pgvector extension
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Update YugabyteDB Credentials
 
@@ -487,7 +486,7 @@ docker network connect docker_default graphrag
 docker network connect docker_default embedding-worker
 ```
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Doc Processor (Port 5006)
 
@@ -507,7 +506,7 @@ docker network connect docker_default embedding-worker
 - `GET /graph/visualize` - Get graph data for visualization
 - `POST /graph/deduplicate` - Merge duplicate entities
 
-## 🔗 Using in Dify Workflows
+## Using in Dify Workflows
 
 ### 1. Extract Text from Document
 
@@ -558,7 +557,7 @@ docker network connect docker_default embedding-worker
 }
 ```
 
-## 📊 Graph Visualization
+## Graph Visualization
 
 View your knowledge graph in a web interface:
 
@@ -574,7 +573,7 @@ open http://localhost:8080/visualize.html
 
 The visualization fetches data from `http://localhost:5005/graph/visualize`.
 
-## 🧪 Testing
+## Testing
 
 ### Test Doc Processor
 
@@ -612,7 +611,7 @@ curl -X POST http://localhost:5005/graph/semantic-search \
   -d '{"query": "test", "limit": 5}'
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### YugabyteDB Connection Issues
 
@@ -669,7 +668,7 @@ sudo rm -rf dify/docker/volumes/plugin_daemon/cwd/*
 docker start docker-plugin_daemon-1
 ```
 
-## 📝 Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -712,22 +711,22 @@ docker start docker-plugin_daemon-1
 - **Multi-Cloud**: Run anywhere (AWS, GCP, Azure, on-prem)
 - **ACID Transactions**: Strong consistency guarantees
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [YugabyteDB](https://www.yugabyte.com/) - Distributed SQL database for graph storage
 - [Dify.ai](https://dify.ai) - Open-source LLM app development platform
 - [sentence-transformers](https://www.sbert.net/) - Embedding generation
 - [pgvector](https://github.com/pgvector/pgvector) - Vector similarity search extension
 
-## 📞 Support
+## Support
 
 For issues and questions:
 - Open an issue on GitHub
