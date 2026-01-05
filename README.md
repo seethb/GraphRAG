@@ -297,7 +297,7 @@ while True:
         nodes = cur.fetchall()
         
         if not nodes:
-            print("✅ All nodes have embeddings. Sleeping 30s...")
+            print("All nodes have embeddings. Sleeping 30s...")
             time.sleep(30)
             continue
         
