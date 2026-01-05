@@ -1,0 +1,11 @@
+flask==3.0.0
+psycopg2-binary==2.9.9
+flask-cors==4.0.0
+sentence-transformers==2.2.2
+torch==2.1.0
+numpy==1.24.3
+torch>=2.0.0
+sentence-transformers>=2.2.0
+transformers>=4.30.0
+torch>=2.1.0
+transformers>=4.35.0
