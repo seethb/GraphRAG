@@ -4,9 +4,9 @@ from sentence_transformers import SentenceTransformer
 import time
 
 DB = {
-    'host': '10.33.16.10',
+    'host': 'yugabytedb',
     'port': 5433,
-    'database': 'dify',
+    'database': 'graphrag',
     'user': 'yugabyte',
     'password': 'yugabyte'
 }

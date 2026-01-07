@@ -2,7 +2,13 @@ from sentence_transformers import SentenceTransformer
 import psycopg2
 import time
 
-DB = {'host': '10.33.16.10', 'port': 5433, 'database': 'dify', 'user': 'yugabyte', 'password': 'yugabyte'}
+DB = {
+    'host': 'yugabytedb',
+    'port': 5433,
+    'database': 'graphrag',
+    'user': 'yugabyte',
+    'password': 'yugabyte'
+}
 
 print("Loading embedding model (first run will download ~90MB)...")
 model = SentenceTransformer('all-MiniLM-L6-v2')

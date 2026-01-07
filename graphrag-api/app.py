@@ -8,9 +8,9 @@ app = Flask(__name__)
 CORS(app)
 
 DB = {
-    'host': '10.33.16.10',
+    'host': 'yugabytedb',
     'port': 5433,
-    'database': 'dify',
+    'database': 'graphrag',
     'user': 'yugabyte',
     'password': 'yugabyte'
 }
@@ -131,10 +131,10 @@ def batch_insert():
         data = request.json
         entities = data.get('entities', [])
         relationships = data.get('relationships', [])
-        
+
         conn = psycopg2.connect(**DB)
         cur = conn.cursor()
-        
+
         entity_ids = {}
         for entity in entities:
             cur.execute("""
@@ -144,27 +144,27 @@ def batch_insert():
                 SET description = COALESCE(EXCLUDED.description, graph_nodes.description)
                 RETURNING id, entity_name
             """, (entity['name'], entity.get('type'), entity.get('description')))
-            
+
             result = cur.fetchone()
             entity_ids[result[1]] = result[0]
-        
+
         edges_created = 0
         for rel in relationships:
             source = rel['source']
             target = rel['target']
-            
+
             if source not in entity_ids:
                 cur.execute("SELECT id FROM graph_nodes WHERE entity_name = %s", (source,))
                 r = cur.fetchone()
                 if r:
                     entity_ids[source] = r[0]
-            
+
             if target not in entity_ids:
                 cur.execute("SELECT id FROM graph_nodes WHERE entity_name = %s", (target,))
                 r = cur.fetchone()
                 if r:
                     entity_ids[target] = r[0]
-            
+
             if source in entity_ids and target in entity_ids:
                 cur.execute("""
                     INSERT INTO graph_edges (source_node_id, target_node_id, relationship_type, weight)
@@ -177,17 +177,17 @@ def batch_insert():
                      rel.get('type', 'related_to'), rel.get('weight', 1.0),
                      entity_ids[source], entity_ids[target]))
                 edges_created += cur.rowcount
-        
+
         conn.commit()
         cur.close()
         conn.close()
-        
+
         return jsonify({
             'status': 'success',
             'entities_processed': len(entities),
             'edges_created': edges_created
         })
-        
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -392,7 +392,7 @@ def visualize():
             SELECT id, entity_name, entity_type, description
             FROM graph_nodes
             ORDER BY created_at DESC
-            LIMIT 100
+            LIMIT 1000
         """)
         
         nodes = [
@@ -417,7 +417,7 @@ def visualize():
                 FROM graph_edges e
                 WHERE e.source_node_id IN ({placeholders})
                    OR e.target_node_id IN ({placeholders})
-                LIMIT 200
+                LIMIT 2000
             """, node_ids + node_ids)
             
             edges = [
