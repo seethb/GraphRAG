@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from sentence_transformers import SentenceTransformer
 import psycopg2
 import json
 import os
