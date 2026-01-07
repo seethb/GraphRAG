@@ -17,11 +17,10 @@ A complete integration of knowledge graph capabilities with Dify.ai, powered by 
 - Docker and Docker Compose installed
 - Git
 - 4GB+ RAM recommended
-- YugabyteDB instance (local or cloud) - [Get started here](https://www.yugabyte.com/download/)
   
 ## Quick Start
 
-To get started locally with Docker, including Dify.ai and a single node YugabyteDB instance, you can follow these few simple step once this repository is cloned locally:
+To get started locally with Docker, including Dify.ai and a single node YugabyteDB instance, you can follow these few simple steps once this repository is cloned locally:
 
 ```
 git clone https://github.com/langgenius/dify.git ./dify
@@ -29,9 +28,11 @@ cp ./dify/docker/.env.example .env
 docker-compose up --build
 ```
 
+This will download and deploy the latest Dify.ai Docker compose manifest as part of the manifest for this repository, which includes the APIs and worker used by the workflow in Dify.ai. All of the containers will be deployed into the same default Docker network.
+
 ## Detailed Setup
 
-A more detailed setup process is explained below. This isn't necessary if you've followed the Quick Start approach.
+A more detailed setup process is explained below. This isn't necessary if you've followed the Quick Start approach. If you'd like to setup YugabyteDB outside Docker you can [get started here](https://www.yugabyte.com/download/).
 
 ### 1. Install Dify
 
