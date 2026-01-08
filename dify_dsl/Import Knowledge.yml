@@ -1,0 +1,673 @@
+app:
+  description: Accepts one or more documents, extracts entities and relationships
+    and inserts them into YugabyteDB for semantic, graph or hybrid search
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: workflow
+  name: Import Knowledge
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.2.8@aae2be0913b8c6f0b80cff58e08d7a8b4c214569b41778413fcaea204561ff16
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_batch_limit: 10
+        image_file_size_limit: 10
+        single_chunk_attachment_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: start
+        targetType: code
+      id: 1767197223864-source-1767259090221-target
+      selected: false
+      source: '1767197223864'
+      sourceHandle: source
+      target: '1767259090221'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1767259090221-source-1767259253623-target
+      selected: false
+      source: '1767259090221'
+      sourceHandle: source
+      target: '1767259253623'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: if-else
+        targetType: http-request
+      id: 1767259253623-true-1767259306774-target
+      selected: false
+      source: '1767259253623'
+      sourceHandle: 'true'
+      target: '1767259306774'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: http-request
+        targetType: code
+      id: 1767259306774-source-1767259714475-target
+      selected: false
+      source: '1767259306774'
+      sourceHandle: source
+      target: '1767259714475'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: code
+      id: 1767259714475-source-1767263760210-target
+      source: '1767259714475'
+      sourceHandle: source
+      target: '1767263760210'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: iteration
+      id: 1767263760210-source-1767823614281-target
+      source: '1767263760210'
+      sourceHandle: source
+      target: '1767823614281'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1767823614281'
+        sourceType: iteration-start
+        targetType: llm
+      id: 1767823614281start-source-17678237536750-target
+      source: 1767823614281start
+      sourceHandle: source
+      target: '17678237536750'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1767823614281'
+        sourceType: llm
+        targetType: code
+      id: 17678237536750-source-17678238200720-target
+      source: '17678237536750'
+      sourceHandle: source
+      target: '17678238200720'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1767823614281'
+        sourceType: code
+        targetType: http-request
+      id: 17678238200720-source-1767824042539-target
+      source: '17678238200720'
+      sourceHandle: source
+      target: '1767824042539'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    nodes:
+    - data:
+        desc: Accept a PDF, Word document or text file to process
+        selected: false
+        title: User Input
+        type: start
+        variables:
+        - default: '2000'
+          hint: ''
+          label: context_depth
+          max_length: 48
+          options: []
+          placeholder: ''
+          required: false
+          type: number
+          variable: chunk_size
+        - allowed_file_extensions: []
+          allowed_file_types:
+          - document
+          allowed_file_upload_methods:
+          - local_file
+          - remote_url
+          default: ''
+          hint: ''
+          label: file
+          max_length: 5
+          options: []
+          placeholder: ''
+          required: true
+          type: file-list
+          variable: file
+      height: 179
+      id: '1767197223864'
+      position:
+        x: 0
+        y: 76
+      positionAbsolute:
+        x: 0
+        y: 76
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "def main(files: list) -> dict:\n    \"\"\"\n    Extract text from uploaded\
+          \ file OR use manual text input\n    \"\"\"\n    import json\n    \n   \
+          \ # If file is uploaded, prepare for extraction\n    if files and len(files)\
+          \ > 0:\n        file_info = files[0]\n        \n        # Try different\
+          \ possible filename fields\n        file_name = (\n            file_info.get('name')\
+          \ or \n            file_info.get('filename') or \n            file_info.get('file_name')\
+          \ or \n            file_info.get('remote_url', '').split('/')[-1] or\n \
+          \           ''\n        )\n        \n        # Extract extension more safely\n\
+          \        if '.' in file_name:\n            extension = file_name.lower().rsplit('.',\
+          \ 1)[-1]\n        else:\n            mime_type = file_info.get('mime_type',\
+          \ '').lower()\n            if 'pdf' in mime_type:\n                extension\
+          \ = 'pdf'\n            elif 'word' in mime_type or 'document' in mime_type:\n\
+          \                extension = 'docx'\n            else:\n               \
+          \ extension = 'txt'\n        \n        # Determine endpoint based on file\
+          \ type\n        if extension == 'pdf':\n            endpoint = 'http://doc-processor:5006/extract/pdf'\n\
+          \        elif extension in ['docx', 'doc']:\n            endpoint = 'http://doc-processor:5006/extract/docx'\n\
+          \        else:\n            endpoint = 'http://doc-processor:5006/extract/text'\n\
+          \        \n        return {\n            \"has_file\": True,\n         \
+          \   \"endpoint\": endpoint,\n            \"file_name\": file_name,\n   \
+          \         \"extension\": extension,\n            \"debug_info\": json.dumps(file_info)\n\
+          \        }\n    else:\n        # No file uploaded, use manual text\n   \
+          \     return {\n            \"has_file\": False,\n            \"endpoint\"\
+          : \"\",\n            \"file_name\": \"\",\n            \"extension\": \"\
+          \",\n            \"debug_info\": \"No files provided\"\n        }"
+        code_language: python3
+        desc: Determine the API endpoint to extract text from the file, based on its
+          type
+        outputs:
+          debug_info:
+            children: null
+            type: string
+          endpoint:
+            children: null
+            type: string
+          extension:
+            children: null
+            type: string
+          file_name:
+            children: null
+            type: string
+          has_file:
+            children: null
+            type: boolean
+        selected: false
+        title: Decide how to extract text
+        type: code
+        variables:
+        - value_selector:
+          - '1767197223864'
+          - file
+          value_type: array[file]
+          variable: files
+      height: 96
+      id: '1767259090221'
+      position:
+        x: 342
+        y: 118
+      positionAbsolute:
+        x: 342
+        y: 118
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: is
+            id: 4e470a5b-9006-486a-9246-8430b18128ee
+            value: true
+            varType: boolean
+            variable_selector:
+            - '1767259090221'
+            - has_file
+          id: 'true'
+          logical_operator: and
+        selected: false
+        title: Confirm we can extract
+        type: if-else
+      height: 124
+      id: '1767259253623'
+      position:
+        x: 684
+        y: 104
+      positionAbsolute:
+        x: 684
+        y: 104
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - file:
+            - '1767197223864'
+            - file
+            id: key-value-648
+            key: file
+            type: file
+            value: ''
+          type: form-data
+        desc: Call an API to extract text from the file
+        headers: ''
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Extract text from document
+        type: http-request
+        url: '{{#1767259090221.endpoint#}}'
+        variables: []
+      height: 168
+      id: '1767259306774'
+      position:
+        x: 1026
+        y: 82
+      positionAbsolute:
+        x: 1026
+        y: 82
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "def main(response_body: str) -> dict:\n    \"\"\"\n    Parse doc-processor\
+          \ response to extract text\n    \"\"\"\n    import json\n    \n    try:\n\
+          \        data = json.loads(response_body)\n        extracted_text = data.get('text',\
+          \ '')\n        char_count = data.get('char_count', len(extracted_text))\n\
+          \        \n        return {\n            \"document_text\": extracted_text,\n\
+          \            \"char_count\": char_count,\n            \"source\": \"pdf_extraction\"\
+          \n        }\n    except Exception as e:\n        return {\n            \"\
+          document_text\": f\"Error extracting text: {str(e)}\",\n            \"char_count\"\
+          : 0,\n            \"source\": \"error\"\n        }"
+        code_language: python3
+        desc: Compile the API's response into a standard JSON object
+        outputs:
+          char_count:
+            children: null
+            type: number
+          document_text:
+            children: null
+            type: string
+          source:
+            children: null
+            type: string
+        selected: false
+        title: Format text into a request
+        type: code
+        variables:
+        - value_selector:
+          - '1767259306774'
+          - body
+          value_type: string
+          variable: response_body
+      height: 96
+      id: '1767259714475'
+      position:
+        x: 1368
+        y: 118
+      positionAbsolute:
+        x: 1368
+        y: 118
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        code: "def main(document_text: str, chunk_size: int) -> dict:\n    \"\"\"\n\
+          \    Split documents into chunks\n    \"\"\"\n    \n    text = document_text.strip()\
+          \ if document_text else \"\"\n    \n    if not text:\n        return {\n\
+          \            \"chunks\": [],\n            \"total_chunks\": 0,\n       \
+          \     \"first_chunk\": \"No text provided\"\n        }\n    \n    # Split\
+          \ into chunks by paragraphs\n    chunks = []\n    paragraphs = text.split('\\\
+          n\\n')\n    current_chunk = \"\"\n    \n    for para in paragraphs:\n  \
+          \      if len(current_chunk) + len(para) < chunk_size:\n            current_chunk\
+          \ += para + \"\\n\\n\"\n        else:\n            if current_chunk.strip():\n\
+          \                chunks.append(current_chunk.strip())\n            current_chunk\
+          \ = para + \"\\n\\n\"\n    \n    # Don't forget the last chunk\n    if current_chunk.strip():\n\
+          \        chunks.append(current_chunk.strip())\n    \n    return {\n    \
+          \    \"chunks\": chunks,\n        \"total_chunks\": len(chunks),\n     \
+          \   \"first_chunk\": chunks[0] if chunks else \"\"\n    }"
+        code_language: python3
+        desc: Separate the extracted text into chunks
+        outputs:
+          chunks:
+            children: null
+            type: array[string]
+          first_chunk:
+            children: null
+            type: string
+          total_chunks:
+            children: null
+            type: number
+        selected: false
+        title: Split text into chunks
+        type: code
+        variables:
+        - value_selector:
+          - '1767259714475'
+          - document_text
+          value_type: string
+          variable: document_text
+        - value_selector:
+          - '1767197223864'
+          - chunk_size
+          value_type: number
+          variable: chunk_size
+      height: 96
+      id: '1767263760210'
+      position:
+        x: 1710
+        y: 118
+      positionAbsolute:
+        x: 1710
+        y: 118
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        error_handle_mode: terminated
+        flatten_output: true
+        height: 437
+        is_parallel: true
+        iterator_input_type: array[string]
+        iterator_selector:
+        - '1767263760210'
+        - chunks
+        output_selector: []
+        parallel_nums: 5
+        selected: false
+        start_node_id: 1767823614281start
+        title: Iteration
+        type: iteration
+        width: 1120
+      height: 437
+      id: '1767823614281'
+      position:
+        x: 2031.6554118113713
+        y: 118
+      positionAbsolute:
+        x: 2031.6554118113713
+        y: 118
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 1120
+      zIndex: 1
+    - data:
+        desc: ''
+        isInIteration: true
+        selected: false
+        title: ''
+        type: iteration-start
+      draggable: false
+      height: 48
+      id: 1767823614281start
+      parentId: '1767823614281'
+      position:
+        x: 60
+        y: 135
+      positionAbsolute:
+        x: 2091.6554118113713
+        y: 253
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-iteration-start
+      width: 44
+      zIndex: 1002
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1767823614281'
+          - item
+        desc: Ask an LLM to read the text chunks to extract entities and the relationships
+          between them
+        isInIteration: true
+        isInLoop: true
+        loop_id: '1767253478515'
+        model:
+          completion_params: {}
+          mode: chat
+          name: gpt-5-mini
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 2bf19d23-1f52-4604-b5b4-8ef9f31dec7a
+          role: system
+          text: '``` You are an expert at extracting structured knowledge from text.
+            Extract entities (people, organizations, technologies, concepts, products,
+            locations) and their relationships. Be specific and accurate. Only extract
+            entities that are clearly mentioned in the text. ```'
+        - id: e0b57f6e-e187-49dd-bd8a-0b8bb6cacb72
+          role: user
+          text: "Extract entities and relationships from the following text:\n\n{#context#}\n\
+            \nReturn ONLY valid JSON with this format:\n{\n  \"entities\": [{\"name\"\
+            : \"...\", \"type\": \"...\", \"description\": \"...\"}],\n  \"relationships\"\
+            : [{\"source\": \"...\", \"target\": \"...\", \"type\": \"...\", \"weight\"\
+            : 0.9}]\n}"
+        selected: false
+        title: 'LLM: Extract entities and relationships (1)'
+        type: llm
+        vision:
+          enabled: false
+      height: 154
+      id: '17678237536750'
+      parentId: '1767823614281'
+      position:
+        x: 181.4569264764218
+        y: 132.86147047157124
+      positionAbsolute:
+        x: 2213.112338287793
+        y: 250.86147047157124
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        code: "\ndef main(llm_output: str) -> dict:\n    import json\n    import re\n\
+          \    \n    try:\n        # Clean markdown if present\n        clean = re.sub(r'```json\\\
+          s*|\\s*```', '', llm_output)\n        clean = clean.strip()\n        \n\
+          \        data = json.loads(clean)\n        \n        entities = data.get('entities',\
+          \ [])\n        relationships = data.get('relationships', [])\n        \n\
+          \        return {\n            \"entities_json\": json.dumps(entities),\n\
+          \            \"relationships_json\": json.dumps(relationships),\n      \
+          \      \"entity_count\": len(entities),\n            \"relationship_count\"\
+          : len(relationships)\n        }\n    except Exception as e:\n        return\
+          \ {\n            \"entities_json\": \"[]\",\n            \"relationships_json\"\
+          : \"[]\",\n            \"entity_count\": 0,\n            \"relationship_count\"\
+          : 0\n        }"
+        code_language: python3
+        desc: Compile the LLM's response into a standard JSON object
+        isInIteration: true
+        isInLoop: true
+        loop_id: '1767253478515'
+        outputs:
+          entities_json:
+            children: null
+            type: string
+          entity_count:
+            children: null
+            type: number
+          relationship_count:
+            children: null
+            type: number
+          relationships_json:
+            children: null
+            type: string
+        selected: false
+        title: Format entities and relationships (1)
+        type: code
+        variables:
+        - value_selector:
+          - '17678237536750'
+          - text
+          value_type: string
+          variable: llm_output
+      height: 96
+      id: '17678238200720'
+      parentId: '1767823614281'
+      position:
+        x: 503.45692647642136
+        y: 131.3445881886285
+      positionAbsolute:
+        x: 2535.1123382877927
+        y: 249.3445881886285
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-198
+            key: ''
+            type: text
+            value: "{\n  \"entities\": {{#17678238200720.entities_json#}},\n  \"relationships\"\
+              : {{#17678238200720.relationships_json#}} \n}"
+          type: json
+        desc: Insert the entities and relationships identified by the LLM into the
+          YugabyteDB database
+        headers: ''
+        isInIteration: true
+        isInLoop: false
+        iteration_id: '1767823614281'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 1
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: true
+        timeout:
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+        title: Insert entities and relationships into database
+        type: http-request
+        url: http://graphrag-api:5005/graph/batch-insert
+        variables: []
+      height: 197
+      id: '1767824042539'
+      parentId: '1767823614281'
+      position:
+        x: 805.4569264764214
+        y: 133.18496348987827
+      positionAbsolute:
+        x: 2837.1123382877927
+        y: 251.18496348987827
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 1002
+    viewport:
+      x: -35.01430276083926
+      y: 198.82624013883697
+      zoom: 0.5433674312630289
+  rag_pipeline_variables: []

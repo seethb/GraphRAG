@@ -1,3 +1,12 @@
+-- Create the demo database
+CREATE DATABASE graphrag;
+
+-- Connect to demo database
+\c graphrag
+
+-- Install the pgvector extension
+CREATE EXTENSION vector;
+
 -- Drop existing tables if any
 DROP TABLE IF EXISTS graph_edges CASCADE;
 DROP TABLE IF EXISTS graph_nodes CASCADE;
@@ -5,9 +14,10 @@ DROP TABLE IF EXISTS graph_nodes CASCADE;
 -- Create graph_nodes table
 CREATE TABLE graph_nodes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    entity_name VARCHAR(255) NOT NULL,
-    entity_type VARCHAR(100),
+    entity_name TEXT UNIQUE NOT NULL,
+    entity_type TEXT,
     description TEXT,
+    embedding vector(384),
     properties JSONB DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -32,6 +42,7 @@ CREATE INDEX idx_edges_target ON graph_edges(target_node_id);
 CREATE INDEX idx_edges_relationship ON graph_edges(relationship_type);
 
 -- Insert sample data
+/*
 INSERT INTO graph_nodes (entity_name, entity_type, description) VALUES
 ('YugabyteDB', 'Database', 'Distributed SQL database with PostgreSQL compatibility for global applications'),
 ('PostgreSQL', 'Database', 'Advanced open-source relational database system'),
@@ -77,3 +88,4 @@ VALUES
 -- Verify data
 SELECT 'Created ' || COUNT(*) || ' nodes' as result FROM graph_nodes;
 SELECT 'Created ' || COUNT(*) || ' edges' as result FROM graph_edges;
+*/

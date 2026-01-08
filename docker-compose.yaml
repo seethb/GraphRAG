@@ -1,0 +1,66 @@
+version: "3.9"
+
+include:
+  - ./dify/docker/docker-compose.yaml
+
+volumes:
+  yugabytedb_data:
+
+services:
+  yugabytedb:
+    container_name: yugabytedb
+    image: yugabytedb/yugabyte:2025.2.0.0-b131
+    restart: unless-stopped
+    ports:
+      - "15433:15433" # Yugabyted admin
+      - "5433:5433"   # YSQL
+      - "9042:9042"   # YCQL
+      - "7001:7000"   # Master admin UI, port 7000 is used on MacOS so remap to 7001
+      - "9001:9000"   # TServer admin UI
+    volumes:
+      - yugabytedb_data:/home/yugabyte/var
+      - ./yugabytedb/init-db.sh:/home/yugabyte/init-db.sh
+      - ./yugabytedb/init-db.sql:/home/yugabyte/init-db.sql
+    # Custom entry point to start YugabyteDB, wait for YSQL to be ready and then setup a database schema
+    entrypoint: ["/bin/bash", "/home/yugabyte/init-db.sh"]
+
+  doc-processor:
+    container_name: doc-processor
+    build:
+      context: ./doc-processor
+    restart: unless-stopped
+    ports:
+      - "5006:5006"
+
+  embedding-worker:
+    container_name: embedding-worker
+    build:
+      context: ./embedding-worker
+    restart: unless-stopped
+
+  graphrag-api:
+    container_name: graphrag-api
+    build:
+      context: ./graphrag-api
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+
+  visualisation:
+    container_name: visualisation
+    build:
+      context: ./visualisation
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+
+  #graphrag-yugabytedb-mcp:
+  #  container_name: yugabytedb-mcp
+  #  image: mcp/yugabytedb
+  #  networks: [docker_default]
+  #  restart: unless-stopped
+  #  ports:
+  #    - "8080:8080"
+  #  command: ["--transport=http"] # Add HTTP transport arg to container entrypoint
+  #  environment:
+  #    - YUGABYTEDB_URL=dbname=yugabyte host=yugabytedb port=5433 insecure=true
